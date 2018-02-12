@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zmonit/zp.svg?branch=master)](https://travis-ci.org/zmonit/zp)
+
 # zp
 ZeroMQ Pipes: connect programs through ZeroMQ from command line
 
