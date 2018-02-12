@@ -1,0 +1,63 @@
+<class
+    name = "zp_proto"
+    title = "The ZeroMQ Pipes Protocol"
+    script = "zproto_codec_c"
+    package_dir = "../include"
+    project_header = "zp_classes.h"
+    signature = "42"
+    export_macro = "ZP_EXPORT"
+    >
+
+    This is a codec for ZerMQ Pipes protocol
+    <include filename = "../license.xml" />
+
+    <message name = "CONNECTION OPEN">
+        Client opening connection to server. Client has own (unique) uuid
+        generated and stored by it. Server replies with OK or ERROR.
+        <field name = "protocol" type = "string" value = "MALAMUTE">Constant "MALAMUTE"</field>
+        <field name = "version" type = "number" size = "2" value = "1">Protocol version 1</field>
+        <field name = "client id" type = "string">Client unique identifier</field>
+    </message>
+    
+    <message name = "CONNECTION PING">
+        Client pings the server. Server replies with CONNECTION-PONG, or
+        ERROR with status COMMAND-INVALID if the client is not recognized
+        (e.g. after a server restart or network recovery).
+    </message>
+
+    <message name = "CONNECTION PONG">
+        Server replies to a client connection ping.
+    </message>
+
+    <message name = "CONNECTION CLOSE">
+        Client closes the connection. This is polite though not mandatory.
+        Server will reply with OK.
+    </message>
+    
+    <!-- These messages are used in all classes -->
+    <message name = "OK">
+        Server replies with success status. Actual status code provides more
+        information. An OK always has a 2xx status code.
+        <field name = "status" type = "status" />
+    </message>
+
+    <message name = "ERROR">
+        Server replies with failure status. Actual status code provides more
+        information. An ERROR always has a 4xx, or 5xx status code. Is similar
+        to HTTP status codes.
+        <field name = "status" type = "status" />
+    </message>
+
+    <type name = "status">
+        <field name = "code" type = "number" size = "2">3-digit status code</field>
+        <field name = "reason" type = "string">Printable explanation</field>
+    </type>
+
+    <!-- Success codes -->
+    <define name = "SUCCESS" value = "200" />
+
+    <!-- System errors -->
+    <define name = "BAD REQUEST" value = "400" />
+    <define name = "INTERNAL SERVER ERROR" value = "500" />
+    <define name = "NOT IMPLEMENTED" value = "501" />
+</class>

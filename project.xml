@@ -15,7 +15,7 @@
 
     <!-- Models that we build using GSL -->
     <model name = "zp_proto" />
-    <class name = "zp_proto" private = "1" />
+    <class name = "zp_proto" />
 
     <!-- Command-line utilities -->
     <main name = "zp" />
