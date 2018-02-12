@@ -11,6 +11,8 @@
     <abi current = "0" revision = "1" age = "0" />
     <use project = "czmq" />
 
+    <target name = "travis" />
+
     <!-- Models that we build using GSL -->
     <model name = "zp_proto" />
     <class name = "zp_proto" private = "1" />
