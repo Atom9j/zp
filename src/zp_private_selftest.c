@@ -29,8 +29,6 @@
 void
 zp_private_selftest (bool verbose)
 {
-// Tests for stable private classes:
-    zp_proto_test (verbose);
 }
 /*
 ################################################################################

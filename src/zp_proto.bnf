@@ -1,0 +1,50 @@
+The following ABNF grammar defines the The ZeroMQ Pipes Protocol:
+
+    zp_proto        = *( CONNECTION-OPEN | CONNECTION-PING | CONNECTION-PONG | CONNECTION-CLOSE | OK | ERROR )
+
+    ;  Client opening connection to server. Client has own (unique) uuid
+    ;  generated and stored by it. Server replies with OK or ERROR.
+
+    CONNECTION-OPEN = signature %d1 protocol version client_id
+    signature       = %xAA %xA42            ; two octets
+    protocol        = string                ; Constant "MALAMUTE"
+    version         = number-2              ; Protocol version 1
+    client_id       = string                ; Client unique identifier
+
+    ;  Client pings the server. Server replies with CONNECTION-PONG, or ERROR
+    ;  with status COMMAND-INVALID if the client is not recognized (e.g.
+    ;  after a server restart or network recovery).
+
+    CONNECTION-PING = signature %d2
+
+    ;  Server replies to a client connection ping.
+
+    CONNECTION-PONG = signature %d3
+
+    ;  Client closes the connection. This is polite though not mandatory.
+    ;  Server will reply with OK.
+
+    CONNECTION-CLOSE = signature %d4
+
+    ;  Server replies with success status. Actual status code provides more
+    ;  information. An OK always has a 2xx status code.
+
+    OK              = signature %d5 status
+    status          = status                ;
+    status          = code reason
+    code            = number-2              ; 3-digit status code
+    reason          = string                ; Printable explanation
+
+    ;  Server replies with failure status. Actual status code provides more
+    ;  information. An ERROR always has a 4xx, or 5xx status code. Is similar
+    ;  to HTTP status codes.
+
+    ERROR           = signature %d6 status
+    status          = status                ;
+
+    ; Strings are always length + text contents
+    string          = number-1 *VCHAR
+
+    ; Numbers are unsigned integers in network byte order
+    number-1        = 1OCTET
+    number-2        = 2OCTET

@@ -67,9 +67,17 @@
 
 //  Opaque class structures to allow forward references
 //  These classes are stable or legacy and built in all releases
+//  Draft classes are by default not built in stable releases
+#ifdef ZP_BUILD_DRAFT_API
+typedef struct _zp_proto_t zp_proto_t;
+#define ZP_PROTO_T_DEFINED
+#endif // ZP_BUILD_DRAFT_API
 
 
 //  Public classes, each with its own header file
+#ifdef ZP_BUILD_DRAFT_API
+#include "zp_proto.h"
+#endif // ZP_BUILD_DRAFT_API
 
 #ifdef ZP_BUILD_DRAFT_API
 //  Self test for private classes

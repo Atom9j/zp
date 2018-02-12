@@ -29,6 +29,10 @@ typedef struct {
 static test_item_t
 all_tests [] = {
 #ifdef ZP_BUILD_DRAFT_API
+// Tests for draft public classes:
+    { "zp_proto", zp_proto_test },
+#endif // ZP_BUILD_DRAFT_API
+#ifdef ZP_BUILD_DRAFT_API
     { "private_classes", zp_private_selftest },
 #endif // ZP_BUILD_DRAFT_API
     {0, 0}          //  Sentinel
@@ -95,6 +99,7 @@ main (int argc, char **argv)
         if (streq (argv [argn], "--list")
         ||  streq (argv [argn], "-l")) {
             puts ("Available tests:");
+            puts ("    zp_proto\t\t- draft");
             puts ("    private_classes\t- draft");
             return 0;
         }
