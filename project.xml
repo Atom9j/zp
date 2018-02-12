@@ -1,0 +1,26 @@
+<project
+    name = "zp"
+    description = "ZeroMQ Pipes"
+    script = "zproject.gsl"
+    license = "MPLv2"
+    url = "https://github.com/zmonit/zp"
+    repository = "https://github.com/zmonit/zp"
+    >
+    <include filename = "license.xml" />
+    <version major = "0" minor = "1" patch = "0" />
+    <abi current = "0" revision = "1" age = "0" />
+    <use project = "czmq" />
+
+    <target name = "travis" />
+
+    <!-- Models that we build using GSL -->
+    <model name = "zp_proto" />
+    <class name = "zp_proto" private = "1" />
+
+    <!-- Command-line utilities -->
+    <main name = "zp" />
+    <main name = "zpc" />
+    <!-- Server -->
+    <main name = "zpd" service = "1"/>
+
+</project>
