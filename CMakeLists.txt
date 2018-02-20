@@ -128,6 +128,7 @@ message(STATUS "Detected ZP Version - ${ZP_VERSION}")
 set (zp_headers
     include/zp_library.h
     include/zp.h
+    src/zp_exec.h
 )
 
 IF (ENABLE_DRAFTS)
@@ -147,6 +148,7 @@ install(FILES ${zp_headers} DESTINATION include)
 
 include_directories("${SOURCE_DIR}/src" "${SOURCE_DIR}/include")
 set (zp_sources
+    src/zp_exec.c
 )
 
 IF (ENABLE_DRAFTS)

@@ -36,6 +36,12 @@ all_tests [] = {
     { "zp_proto", zp_proto_test, false, true, NULL },
     { "zp_server", zp_server_test, false, true, NULL },
 #endif // ZP_BUILD_DRAFT_API
+#ifdef ZP_BUILD_DRAFT_API
+// Tests for stable/draft private classes:
+// Now built only with --enable-drafts, so even stable builds are hidden behind the flag
+    { "zp_exec", NULL, true, false, "zp_exec_test" },
+    { "private_classes", NULL, false, false, "$ALL" }, // compat option for older projects
+#endif // ZP_BUILD_DRAFT_API
     {0, 0, 0}          //  Sentinel
 };
 

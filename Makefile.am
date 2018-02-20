@@ -44,6 +44,7 @@ EXTRA_DIST += \
 endif
 
 EXTRA_DIST += \
+    src/zp_exec.h \
     README.md \
     src/zp_classes.h
 

@@ -14,6 +14,9 @@
     <target name = "travis" />
     <class name = "zp_proto" />
     <class name = "zp_server" />
+    <actor name = "zp_exec" private = "1" >
+        ZeroMQ pipes process execution engine
+    </actor>
 
     <!-- Models that we build using GSL -->
     <model name = "zp_proto" />

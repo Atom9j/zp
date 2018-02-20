@@ -29,6 +29,9 @@
 void
 zp_private_selftest (bool verbose, const char *subtest)
 {
+// Tests for stable private classes:
+    if (streq (subtest, "$ALL") || streq (subtest, "zp_exec_test"))
+        zp_exec_test (verbose);
 }
 /*
 ################################################################################
