@@ -17,19 +17,19 @@ Connect two programs via `zp` as a unix pipe. `zp` command will act as openssh c
 While synchronous run is a great thing to do, there are cases you’d like to have an ability to run jobs in a background.
 
     $ zp --async $user@some.host long-running-process
-    $ id={uuid}
+    $ id=id
 
 To get a list of running jobs
 
     $ zp jobs $user@some.host
-    {uuid1}
-    {uuid2}
-    {uuid3}
+    id1
+    id2
+    id3
 
 To get status of running command
 
-    $ zp job status $user@some.host
-    {uuid}
+    $ zp job status $user@some.host id1
+    id1
         status = running
         command_line = “long-running-process”
         stdout = connected
@@ -37,7 +37,7 @@ To get status of running command
 
 To monitor stdin/stderr
 
-    $ zp job follow [--stdout/--stderr/--all] $user@some.host {uuid}
+    $ zp job follow [--stdout/--stderr/--all] $user@some.host id
 
 ## File transfer
 Use chunked transfer of files to host

@@ -58,6 +58,51 @@
 
     <!-- System errors -->
     <define name = "BAD REQUEST" value = "400" />
+    <define name = "NOT FOUND" value = "404" />
     <define name = "INTERNAL SERVER ERROR" value = "500" />
     <define name = "NOT IMPLEMENTED" value = "501" />
+
+    <message name = "EXEC">
+        Remote process execution
+        <field name = "args" type = "strings">
+            Arguments of command to be run
+        </field>
+        <field name = "env" type = "hash">
+            Optional environment variables to pass to executed process.
+        </field>
+        <field name = "aux" type = "hash">
+            Additional data controlling program execution
+        </field>
+    </message>
+
+    <!-- Server messages to client -->
+    <message name = "EXEC-STATUS-REPLY">
+        <field name = "handle" type = "number" size = "4">Handle id of a running job. Use it to check the status of command execution.</field>
+        <field name = "returncode" type = "number" size = "2">Return code, ZP_PROTO_QUEUED, ZP_PROTO_RUNNING</field>
+    </message>
+
+    <message name = "EXEC-CHUNK">
+        <field name = "handle" type = "number" size = "4">Job handle</field>
+        <field name = "fd" type = "number" size = "4">(server) fd number</field>
+        <field name = "chunk" type = "chunk" >Chunk with a result</field>
+    </message>
+
+    <message name = "EXEC-LIST-REPLY">
+        <field name = "handles" type = "strings">
+            List of handles belonging to this (?) client
+        </field>
+    </message>
+
+    <!-- Client requests to server-->
+    <message name = "EXEC-STATUS-GET">
+        <field name = "handle" type = "number" size = "4">Client asks for exec status</field>
+    </message>
+
+    <message name = "EXEC-LIST">
+        Client asks for all jobs it can access.
+    </message>
+
+    <message name = "EXEC-CANCEL">
+        <field name = "handle" type = "number" size = "4">Client asks for exec status</field>
+    </message>
 </class>

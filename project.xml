@@ -12,10 +12,12 @@
     <use project = "czmq" />
 
     <target name = "travis" />
+    <class name = "zp_proto" />
+    <class name = "zp_server" />
 
     <!-- Models that we build using GSL -->
     <model name = "zp_proto" />
-    <class name = "zp_proto" />
+    <model name = "zp_server" />
 
     <!-- Command-line utilities -->
     <main name = "zp" />

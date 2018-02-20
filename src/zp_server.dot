@@ -1,0 +1,57 @@
+## Automatically generated from zp_server.xml by gsl
+digraph "zp_server" {
+
+ "start" [shape = "doublecircle"];
+ "start connection close" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">connection close</font></td></tr><tr><td align="left" port="r3">send</td></tr><tr><td align="left" port="r3">client closed connection</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "start" -> "start connection close";
+ "start connection close" -> "settling";
+ "start expired" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">expired</font></td></tr><tr><td align="left" port="r3">client expired</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "start" -> "start expired";
+ "start expired" -> "settling";
+ "start exception" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">exception</font></td></tr><tr><td align="left" port="r3">signal operation failed</td></tr><tr><td align="left" port="r3">send</td></tr><tr><td align="left" port="r3">client had exception</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "start" -> "start exception";
+ "start exception" -> "settling";
+ "start connection open" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">connection open</font></td></tr><tr><td align="left" port="r3">register new client</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "start" -> "start connection open";
+ "start connection open" -> "connected";
+ "start *" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">*</font></td></tr><tr><td align="left" port="r3">signal command invalid</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "start" -> "start *";
+ "start *" -> "start";
+
+ "connected" [shape = "doublecircle"];
+ "connected connection close" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">connection close</font></td></tr><tr><td align="left" port="r3">send</td></tr><tr><td align="left" port="r3">client closed connection</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "connected" -> "connected connection close";
+ "connected connection close" -> "settling";
+ "connected expired" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">expired</font></td></tr><tr><td align="left" port="r3">client expired</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "connected" -> "connected expired";
+ "connected expired" -> "settling";
+ "connected exception" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">exception</font></td></tr><tr><td align="left" port="r3">signal operation failed</td></tr><tr><td align="left" port="r3">send</td></tr><tr><td align="left" port="r3">client had exception</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "connected" -> "connected exception";
+ "connected exception" -> "settling";
+ "connected *" [shape = "Mrecord" style = dashed label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">*</font></td></tr><tr><td align="left" port="r3">signal command invalid</td></tr><tr><td align="left" port="r3">send</td></tr><tr><td align="left" port="r3">deregister the client</td></tr><tr><td align="left" port="r3">allow time to settle</td></tr></table>>];
+ "connected" -> "connected *";
+ "connected *" -> "settling";
+ "connected exec" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">exec</font></td></tr><tr><td align="left" port="r3">exec new process</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "connected" -> "connected exec";
+ "connected exec" -> "connected";
+ "connected exec-status-get" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">exec-status-get</font></td></tr><tr><td align="left" port="r3">exec status get</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "connected" -> "connected exec-status-get";
+ "connected exec-status-get" -> "connected";
+ "connected exec-list" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">exec-list</font></td></tr><tr><td align="left" port="r3">exec list</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "connected" -> "connected exec-list";
+ "connected exec-list" -> "connected";
+ "connected exec-cancel" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">exec-cancel</font></td></tr><tr><td align="left" port="r3">exec list</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "connected" -> "connected exec-cancel";
+ "connected exec-cancel" -> "connected";
+
+ "settling" [shape = "doublecircle"];
+ "settling settled" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">settled</font></td></tr><tr><td align="left" port="r3">terminate</td></tr></table>>];
+ "settling" -> "settling settled";
+ "settling settled" -> "settling";
+ "settling connection open" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">connection open</font></td></tr><tr><td align="left" port="r3">register new client</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "settling" -> "settling connection open";
+ "settling connection open" -> "connected";
+ "settling *" [shape = "Mrecord" style = solid label = <<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td bgcolor="black" align="center" colspan="2"><font color="white">*</font></td></tr><tr><td align="left" port="r3">signal command invalid</td></tr><tr><td align="left" port="r3">send</td></tr></table>>];
+ "settling" -> "settling *";
+ "settling *" -> "settling";
+}

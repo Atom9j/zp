@@ -36,7 +36,7 @@
 
 //  Self test for private classes
 ZP_PRIVATE void
-    zp_private_selftest (bool verbose);
+    zp_private_selftest (bool verbose, const char *subtest);
 
 #endif // ZP_BUILD_DRAFT_API
 

@@ -13,8 +13,14 @@ lib_LTLIBRARIES += src/libzp.la
 pkgconfig_DATA = src/libzp.pc
 
 src_libzp_la_SOURCES = \
-    src/zp_proto.c \
     src/platform.h
+
+if ENABLE_DRAFTS
+src_libzp_la_SOURCES += \
+    src/zp_proto.c \
+    src/zp_server.c
+
+endif
 
 if ENABLE_DRAFTS
 src_libzp_la_SOURCES += \
@@ -80,6 +86,11 @@ src_zp_selftest_LDADD = ${program_libs}
 src_zp_selftest_SOURCES = src/zp_selftest.c
 endif #ENABLE_ZP_SELFTEST
 
+# Install api files into /usr/local/share/zproject
+apidir = @datadir@/zproject/zp
+dist_api_DATA = \
+    api/zp_proto.api
+
 # define custom target for all products of /src
 src: \
 		src/zp \
@@ -90,7 +101,8 @@ src: \
 
 # Produce generated code from models in the src directory
 code:
-	cd $(srcdir)/src; gsl -topdir:.. -zproject:1 -private:1 -q zp_proto.xml
+	cd $(srcdir)/src; gsl -topdir:.. -zproject:1 -q zp_proto.xml
+	cd $(srcdir)/src; gsl -topdir:.. -zproject:1 -q zp_server.xml
 	cd $(srcdir); gsl -target:- project.xml
 
 # Directories with test fixtures optionally provided by the project,

@@ -128,8 +128,14 @@ message(STATUS "Detected ZP Version - ${ZP_VERSION}")
 set (zp_headers
     include/zp_library.h
     include/zp.h
-    src/zp_proto.h
 )
+
+IF (ENABLE_DRAFTS)
+    list(APPEND zp_headers
+        include/zp_proto.h
+        include/zp_server.h
+    )
+ENDIF (ENABLE_DRAFTS)
 
 source_group ("Header Files" FILES ${zp_headers})
 install(FILES ${zp_headers} DESTINATION include)
@@ -141,8 +147,15 @@ install(FILES ${zp_headers} DESTINATION include)
 
 include_directories("${SOURCE_DIR}/src" "${SOURCE_DIR}/include")
 set (zp_sources
-    src/zp_proto.c
 )
+
+IF (ENABLE_DRAFTS)
+    list (APPEND zp_sources
+        src/zp_proto.c
+        src/zp_server.c
+    )
+ENDIF (ENABLE_DRAFTS)
+
 IF (ENABLE_DRAFTS)
     list (APPEND zp_sources
         src/zp_private_selftest.c
@@ -374,6 +387,13 @@ endif()
 
 set(TEST_CLASSES
 )
+
+IF (ENABLE_DRAFTS)
+    list (APPEND TEST_CLASSES
+    zp_proto
+    zp_server
+    )
+ENDIF (ENABLE_DRAFTS)
 
 IF (ENABLE_DRAFTS)
     list (APPEND TEST_CLASSES
