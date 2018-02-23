@@ -1,6 +1,6 @@
 The following ABNF grammar defines the The ZeroMQ Pipes Protocol:
 
-    zp_proto        = *( CONNECTION-OPEN | CONNECTION-PING | CONNECTION-PONG | CONNECTION-CLOSE | OK | ERROR )
+    zp_proto        = *( CONNECTION-OPEN | CONNECTION-PING | CONNECTION-PONG | CONNECTION-CLOSE | OK | ERROR | EXEC | EXEC-STATUS-REPLY | EXEC-CHUNK | EXEC-LIST-REPLY | EXEC-STATUS-GET | EXEC-LIST | EXEC-CANCEL )
 
     ;  Client opening connection to server. Client has own (unique) uuid
     ;  generated and stored by it. Server replies with OK or ERROR.
@@ -42,9 +42,64 @@ The following ABNF grammar defines the The ZeroMQ Pipes Protocol:
     ERROR           = signature %d6 status
     status          = status                ;
 
+    ;  Remote process execution
+
+    EXEC            = signature %d7 args env aux
+    args            = strings               ; Arguments of command to be run
+    env             = hash                  ; Optional environment variables to pass to executed process.
+    aux             = hash                  ; Additional data controlling program execution
+
+    ;  No description
+
+    EXEC-STATUS-REPLY = signature %d8 handle returncode
+    handle          = number-4              ; Handle id of a running job. Use it to check the status of command execution.
+    returncode      = number-2              ; Return code, ZP_PROTO_QUEUED, ZP_PROTO_RUNNING
+
+    ;  No description
+
+    EXEC-CHUNK      = signature %d9 handle fd chunk
+    handle          = number-4              ; Job handle
+    fd              = number-4              ; (server) fd number
+    chunk           = chunk                 ; Chunk with a result
+
+    ;  No description
+
+    EXEC-LIST-REPLY = signature %d10 handles
+    handles         = strings               ; List of handles belonging to this (?) client
+
+    ;  No description
+
+    EXEC-STATUS-GET = signature %d11 handle
+    handle          = number-4              ; Client asks for exec status
+
+    ;  Client asks for all jobs it can access.
+
+    EXEC-LIST       = signature %d12
+
+    ;  No description
+
+    EXEC-CANCEL     = signature %d13 handle
+    handle          = number-4              ; Client asks for exec status
+
+    ; A list of string values
+    strings         = strings-count *strings-value
+    strings-count   = number-4
+    strings-value   = longstr
+
+    ; A list of name/value pairs
+    hash            = hash-count *( hash-name hash-value )
+    hash-count      = number-4
+    hash-value      = longstr
+    hash-name       = string
+
+    ; A chunk has 4-octet length + binary contents
+    chunk           = number-4 *OCTET
+
     ; Strings are always length + text contents
     string          = number-1 *VCHAR
+    longstr         = number-4 *VCHAR
 
     ; Numbers are unsigned integers in network byte order
     number-1        = 1OCTET
     number-2        = 2OCTET
+    number-4        = 4OCTET

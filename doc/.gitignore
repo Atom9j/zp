@@ -11,6 +11,10 @@
 *.xml7
 
 # Ignore the source doc texts generated from program sources
+zp_proto.txt
+zp_proto.doc
+zp_server.txt
+zp_server.doc
 zp.txt
 zp.doc
 zpc.txt

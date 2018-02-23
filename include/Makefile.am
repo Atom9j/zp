@@ -6,6 +6,12 @@ include_HEADERS = \
     zp.h \
     zp_library.h
 
+if ENABLE_DRAFTS
+include_HEADERS += \
+    zp_proto.h \
+    zp_server.h
+
+endif
 
 
 ################################################################################

@@ -1,0 +1,220 @@
+<!--
+    zp_proto - The ZeroMQ Pipes Protocol
+
+    Codec class for zp_proto.
+
+    ** WARNING *************************************************************
+    THIS SOURCE FILE IS 100% GENERATED. If you edit this file, you will lose
+    your changes at the next build cycle. This is great for temporary printf
+    statements. DO NOT MAKE ANY CHANGES YOU WISH TO KEEP. The correct places
+    for commits are:
+
+     * The XML model used for this code generation: zp_proto.xml, or
+     * The code generation script that built this file: zproto_codec_c
+    ************************************************************************
+    Copyright (c) the Contributors as noted in the AUTHORS file.
+    This file is part of ZP, ZeroMQ Piper
+    http://githut.com/zmonit/zp
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ -->
+<class name = "zp_proto">
+    <constant name = "success" value = "200" />
+    <constant name = "bad request" value = "400" />
+    <constant name = "not found" value = "404" />
+    <constant name = "internal server error" value = "500" />
+    <constant name = "not implemented" value = "501" />
+    <constant name = "running" value = "1024" />
+    <constant name = "queued" value = "1025" />
+    <constant name = "connection_open" value = "1" />
+    <constant name = "connection_ping" value = "2" />
+    <constant name = "connection_pong" value = "3" />
+    <constant name = "connection_close" value = "4" />
+    <constant name = "ok" value = "5" />
+    <constant name = "error" value = "6" />
+    <constant name = "exec" value = "7" />
+    <constant name = "exec_status_reply" value = "8" />
+    <constant name = "exec_chunk" value = "9" />
+    <constant name = "exec_list_reply" value = "10" />
+    <constant name = "exec_status_get" value = "11" />
+    <constant name = "exec_list" value = "12" />
+    <constant name = "exec_cancel" value = "13" />
+
+<constructor>
+    Create a new empty zp_proto
+</constructor>
+
+<constructor name = "new_zpl">
+    Create a new zp_proto from zpl/zconfig_t *
+    <argument name = "config" type = "zconfig" />
+</constructor>
+
+<destructor>
+    Destroy a zp_proto instance
+</destructor>
+
+<method name = "dup">
+    Create a deep copy of a zp_proto instance
+    <return type="zp_proto" fresh="1" />
+</method>
+
+<method name = "recv">
+    Receive a zp_proto from the socket. Returns 0 if OK, -1 if
+    there was an error. Blocks if there is no message waiting.
+    <argument name = "input" type = "zsock" />
+    <return type = "integer" />
+</method>
+
+<method name = "send">
+    Send the zp_proto to the output socket, does not destroy it
+    <argument name = "output" type = "zsock" />
+    <return type = "integer" />
+</method>
+
+<method name = "print">
+    Print contents of message to stdout
+</method>
+
+<method name = "zpl">
+    Export class as zconfig_t*. Caller is responsibe for destroying the instance
+    <argument name = "parent" type = "zconfig" />
+    <return type = "zconfig" fresh = "1" />
+</method>
+
+
+<method name = "routing id">
+    Get the message routing id, as a frame
+    <return type = "zframe" />
+</method>
+
+<method name = "set routing id">
+    Set the message routing id from a frame
+    <argument name = "routing id" type = "zframe" />
+</method>
+
+<method name = "id">
+    Get the zp_proto message id
+    <return type = "integer" />
+</method>
+
+<method name = "set id">
+    Set the zp_proto message id
+    <argument name = "id" type = "integer" />
+</method>
+
+<method name = "command">
+    Get the zp_proto message id as printable text
+    <return type = "string" />
+</method>
+
+<method name = "client_id">
+    Get the client_id field
+    <return type = "string" />
+</method>
+<method name = "set client_id">
+    Set the client_id field
+    <argument name = "client_id" type = "string" />
+</method>
+<method name = "status_code">
+    Get the status_code field
+    <return type = "number" size = "2" />
+</method>
+<method name = "set status_code">
+    Set the status_code field
+    <argument name = "status_code" type = "number" size = "2" />
+</method>
+<method name = "status_reason">
+    Get the status_reason field
+    <return type = "string" />
+</method>
+<method name = "set status_reason">
+    Set the status_reason field
+    <argument name = "status_reason" type = "string" />
+</method>
+<method name = "args">
+    Get the args field
+    <return type = "zlist" />
+</method>
+<method name = "get args">
+    Get the args field and transfer ownership to caller
+    <return type = "zlist" />
+</method>
+<method name = "set args">
+    Set the args field
+    <argument name = "args_p" type = "zlist" by_reference = "1" />
+</method>
+<method name = "env">
+    Get a copy of the env field
+    <return type = "zhash" />
+</method>
+<method name = "get env">
+    Get the env field and transfer ownership to caller
+    <return type = "zhash" />
+</method>
+    Set the env field, transferring ownership from caller
+<method name = "set env">
+    <argument name = "env_p" type = "zhash" by_reference = "1" />
+</method>
+<method name = "aux">
+    Get a copy of the aux field
+    <return type = "zhash" />
+</method>
+<method name = "get aux">
+    Get the aux field and transfer ownership to caller
+    <return type = "zhash" />
+</method>
+    Set the aux field, transferring ownership from caller
+<method name = "set aux">
+    <argument name = "aux_p" type = "zhash" by_reference = "1" />
+</method>
+<method name = "handle">
+    Get the handle field
+    <return type = "number" size = "4" />
+</method>
+<method name = "set handle">
+    Set the handle field
+    <argument name = "handle" type = "number" size = "4" />
+</method>
+<method name = "returncode">
+    Get the returncode field
+    <return type = "number" size = "2" />
+</method>
+<method name = "set returncode">
+    Set the returncode field
+    <argument name = "returncode" type = "number" size = "2" />
+</method>
+<method name = "fd">
+    Get the fd field
+    <return type = "number" size = "4" />
+</method>
+<method name = "set fd">
+    Set the fd field
+    <argument name = "fd" type = "number" size = "4" />
+</method>
+<method name = "chunk">
+    Get a copy of the chunk field
+    <return type = "zchunk" />
+</method>
+<method name = "get chunk">
+    Get the chunk field and transfer ownership to caller
+    <return type = "zchunk" />
+</method>
+    Set the chunk field, transferring ownership from caller
+<method name = "set chunk">
+    <argument name = "chunk_p" type = "zchunk" by_reference = "1" />
+</method>
+<method name = "handles">
+    Get the handles field
+    <return type = "zlist" />
+</method>
+<method name = "get handles">
+    Get the handles field and transfer ownership to caller
+    <return type = "zlist" />
+</method>
+<method name = "set handles">
+    Set the handles field
+    <argument name = "handles_p" type = "zlist" by_reference = "1" />
+</method>
+</class>

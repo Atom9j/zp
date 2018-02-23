@@ -71,18 +71,21 @@
 #ifdef ZP_BUILD_DRAFT_API
 typedef struct _zp_proto_t zp_proto_t;
 #define ZP_PROTO_T_DEFINED
+typedef struct _zp_server_t zp_server_t;
+#define ZP_SERVER_T_DEFINED
 #endif // ZP_BUILD_DRAFT_API
 
 
 //  Public classes, each with its own header file
 #ifdef ZP_BUILD_DRAFT_API
 #include "zp_proto.h"
+#include "zp_server.h"
 #endif // ZP_BUILD_DRAFT_API
 
 #ifdef ZP_BUILD_DRAFT_API
 //  Self test for private classes
 ZP_EXPORT void
-    zp_private_selftest (bool verbose);
+    zp_private_selftest (bool verbose, const char *subtest);
 #endif // ZP_BUILD_DRAFT_API
 
 #endif
