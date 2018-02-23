@@ -32,6 +32,8 @@ extern "C" {
 #define ZP_PROTO_NOT_FOUND 404              //
 #define ZP_PROTO_INTERNAL_SERVER_ERROR 500  //
 #define ZP_PROTO_NOT_IMPLEMENTED 501        //
+#define ZP_PROTO_RUNNING 1024               //
+#define ZP_PROTO_QUEUED 1025                //
 #define ZP_PROTO_CONNECTION_OPEN 1          //
 #define ZP_PROTO_CONNECTION_PING 2          //
 #define ZP_PROTO_CONNECTION_PONG 3          //

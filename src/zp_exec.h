@@ -32,19 +32,27 @@ typedef struct _zp_exec_t zp_exec_t;
 //
 //  Enable verbose logging of commands and activity:
 //
-//      zstr_send (zp_exec, "VERBOSE");
+//      zsock_bsend (zp_exec, "sp", "VERBOSE", NULL);
 //
 //  Start zp_exec actor.
 //
-//      zstr_sendx (zp_exec, "START", NULL);
+//      zsock_bsend (zp_exec, "sp", "START", zp_proto_dup (msg));
 //
 //  Stop zp_exec actor.
 //
-//      zstr_sendx (zp_exec, "STOP", NULL);
+//      zsock_bsend (zp_exec, "sp", "STOP", NULL);
+//
+//  Terminate zp_exec actor.
+//
+//      zsock_bsend (zp_exec, "sp", "$TERM", NULL);
 //
 //  This is the zp_exec constructor as a zactor_fn;
 ZP_EXPORT void
     zp_exec_actor (zsock_t *pipe, void *args);
+
+//  Destructor for zp_exec actor
+ZP_EXPORT void
+    zp_exec_destructor (zactor_t *pipe);
 
 //  Self test of this actor
 ZP_EXPORT void

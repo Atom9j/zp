@@ -26,6 +26,8 @@
     <constant name = "not found" value = "404" />
     <constant name = "internal server error" value = "500" />
     <constant name = "not implemented" value = "501" />
+    <constant name = "running" value = "1024" />
+    <constant name = "queued" value = "1025" />
     <constant name = "connection_open" value = "1" />
     <constant name = "connection_ping" value = "2" />
     <constant name = "connection_pong" value = "3" />

@@ -62,6 +62,10 @@
     <define name = "INTERNAL SERVER ERROR" value = "500" />
     <define name = "NOT IMPLEMENTED" value = "501" />
 
+    <!-- Exec status -->
+    <define name = "RUNNING" value = "1024"/>
+    <define name = "QUEUED" value = "1025"/>
+
     <message name = "EXEC">
         Remote process execution
         <field name = "args" type = "strings">
@@ -77,8 +81,12 @@
 
     <!-- Server messages to client -->
     <message name = "EXEC-STATUS-REPLY">
-        <field name = "handle" type = "number" size = "4">Handle id of a running job. Use it to check the status of command execution.</field>
-        <field name = "returncode" type = "number" size = "2">Return code, ZP_PROTO_QUEUED, ZP_PROTO_RUNNING</field>
+        <field name = "handle" type = "number" size = "4">
+            Handle id of a running job. Use it to check the status of command execution.
+        </field>
+        <field name = "returncode" type = "number" size = "2">
+            Return code, ZP_PROTO_QUEUED, ZP_PROTO_RUNNING
+        </field>
     </message>
 
     <message name = "EXEC-CHUNK">

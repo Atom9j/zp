@@ -27,7 +27,9 @@ struct _zp_exec_t {
     zpoller_t *poller;          //  Socket poller
     bool terminated;            //  Did caller ask us to quit?
     bool verbose;               //  Verbose logging enabled?
-    //  TODO: Declare properties
+    //  Properties!
+    zp_proto_t *msg;            //  Message with arguments passed in
+    zproc_t *proc;              //  Started process (if any)
 };
 
 
@@ -44,7 +46,8 @@ zp_exec_new (zsock_t *pipe, void *args)
     self->terminated = false;
     self->poller = zpoller_new (self->pipe, NULL);
 
-    //  TODO: Initialize properties
+    //  Initialize properties
+    self->proc = NULL;
 
     return self;
 }
@@ -60,7 +63,9 @@ zp_exec_destroy (zp_exec_t **self_p)
     if (*self_p) {
         zp_exec_t *self = *self_p;
 
-        //  TODO: Free actor properties
+        //  Free actor properties
+        zp_proto_destroy (&self->msg);
+        zproc_destroy (&self->proc);
 
         //  Free object itself
         zpoller_destroy (&self->poller);
@@ -74,12 +79,30 @@ zp_exec_destroy (zp_exec_t **self_p)
 //  was successful. Otherwise -1.
 
 static int
-zp_exec_start (zp_exec_t *self)
+zp_exec_start (zp_exec_t *self, zp_proto_t *msg)
 {
     assert (self);
+    assert (msg);
+    assert (zp_proto_id (msg) == ZP_PROTO_EXEC);
+    assert (!self->proc); // cannot pass START twice
 
-    //  TODO: Add startup actions
+    //  Add startup actions
+    zproc_t *proc = zproc_new ();
+    assert (proc);
+    zlist_t *args = zp_proto_get_args (msg);
+    zproc_set_args (proc, &args);
+    zhash_t *env = zp_proto_get_env (msg);
+    if (env)
+        zproc_set_env (proc, &env);
 
+    zproc_set_stdout (proc, NULL);
+    zpoller_add (self->poller, zproc_stdout (proc));
+    zpoller_add (self->poller, zproc_stderr (proc));
+
+    self->msg = msg;
+    self->proc = proc;
+
+    zp_proto_set_returncode (self->msg, ZP_PROTO_RUNNING);
     return 0;
 }
 
@@ -94,6 +117,9 @@ zp_exec_stop (zp_exec_t *self)
 
     //  TODO: Add shutdown actions
 
+    if (self->proc) {
+        zproc_kill (self->proc, SIGKILL);
+    }
     return 0;
 }
 
@@ -104,13 +130,14 @@ static void
 zp_exec_recv_api (zp_exec_t *self)
 {
     //  Get the whole message of the pipe in one go
-    zmsg_t *request = zmsg_recv (self->pipe);
-    if (!request)
+    zp_proto_t *msg = NULL;
+    char *command = NULL;
+    int r = zsock_brecv (self->pipe, "sp", &command, &msg);
+    if (r == -1)
        return;        //  Interrupted
 
-    char *command = zmsg_popstr (request);
     if (streq (command, "START"))
-        zp_exec_start (self);
+        zp_exec_start (self, msg);
     else
     if (streq (command, "STOP"))
         zp_exec_stop (self);
@@ -125,10 +152,24 @@ zp_exec_recv_api (zp_exec_t *self)
         zsys_error ("invalid command '%s'", command);
         assert (false);
     }
-    zstr_free (&command);
-    zmsg_destroy (&request);
+    zp_proto_destroy (&msg);
 }
 
+//  Read chunk from sock and write to self->pipe
+static void
+zp_send_exec_chunk (zp_exec_t *self, void *sock, int fileno)
+{
+    zp_proto_t *msg = zp_proto_new ();
+    zp_proto_set_id (msg, ZP_PROTO_EXEC_CHUNK);
+    zp_proto_set_handle (msg, 42); // where to store handle?
+    zp_proto_set_fd (msg, fileno);
+
+    zchunk_t *chunk;
+    int r = zsock_brecv (sock, "c", &chunk);
+    if (r == 0)
+        zp_proto_set_chunk (msg, &chunk);
+    zsock_bsend (self->pipe, "sp", "CHUNk", msg);
+}
 
 //  --------------------------------------------------------------------------
 //  This is the actor which runs in its own thread.
@@ -147,26 +188,26 @@ zp_exec_actor (zsock_t *pipe, void *args)
         zsock_t *which = (zsock_t *) zpoller_wait (self->poller, 0);
         if (which == self->pipe)
             zp_exec_recv_api (self);
-       //  Add other sockets when you need them.
+        else
+        if (self->proc && zproc_stdout (self->proc))
+            zp_send_exec_chunk (self, zproc_stdout (self->proc), STDOUT_FILENO);
+        else
+        if (self->proc && zproc_stderr (self->proc))
+            zp_send_exec_chunk (self, zproc_stderr (self->proc), STDERR_FILENO);
     }
     zp_exec_destroy (&self);
 }
 
+void
+zp_exec_destructor (zactor_t *self)
+{
+    assert (self);
+    if (zsock_bsend (self, "sp", "$TERM", NULL) == 0)
+        zsock_wait (self);
+}
+
 //  --------------------------------------------------------------------------
 //  Self test of this actor.
-
-// If your selftest reads SCMed fixture data, please keep it in
-// src/selftest-ro; if your test creates filesystem objects, please
-// do so under src/selftest-rw.
-// The following pattern is suggested for C selftest code:
-//    char *filename = NULL;
-//    filename = zsys_sprintf ("%s/%s", SELFTEST_DIR_RO, "mytemplate.file");
-//    assert (filename);
-//    ... use the "filename" for I/O ...
-//    zstr_free (&filename);
-// This way the same "filename" variable can be reused for many subtests.
-#define SELFTEST_DIR_RO "src/selftest-ro"
-#define SELFTEST_DIR_RW "src/selftest-rw"
 
 void
 zp_exec_test (bool verbose)
@@ -176,7 +217,7 @@ zp_exec_test (bool verbose)
     //  Simple create/destroy test
     zactor_t *zp_exec = zactor_new (zp_exec_actor, NULL);
     assert (zp_exec);
-
+    zactor_set_destructor (zp_exec, zp_exec_destructor);
     zactor_destroy (&zp_exec);
     //  @end
 
